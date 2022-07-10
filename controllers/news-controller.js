@@ -67,7 +67,7 @@ export const updateNews = async (req, res) => {
     const {title, description, imageUrl, tags} = req.body
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({message: ` no tour exist with id : ${id}`})
-        const updateTour = {title, description, tags, imageUrl, _id: id}
+        const updateTour = {title, description, tags: tags.split(','), imageUrl, _id: id}
         await newsModal.findByIdAndUpdate(id, updateTour, {new: true})
         res.json(updateTour)
     } catch (err) {
