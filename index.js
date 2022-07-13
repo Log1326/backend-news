@@ -2,8 +2,12 @@ import express from 'express'
 import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
-import router from "./router/api.js";
-
+import authRouter from './router/auth-router.js'
+import userRouter from './router/user-router.js'
+import newsRouter from './router/news-router.js'
+import uploadRouter from './router/upload-router.js'
+import chatRouter from './router/chat-router.js'
+import messageRouter from './router/message-router.js'
 import mongoose from "mongoose";
 
 const app = express();
@@ -15,8 +19,16 @@ app.use(cors());
 
 
 //router
-app.use('/api', router)
-app.use('/api/uploads', express.static('uploads'))
+app.use('/auth', authRouter)
+app.use('/', userRouter)
+app.use('/news', newsRouter)
+app.use('/file', uploadRouter)
+app.use('/chat', chatRouter)
+app.use('/message', messageRouter)
+
+
+
+app.use('/uploads', express.static('uploads'))
 
 //port
 const port = 5000 || process.env.PORT

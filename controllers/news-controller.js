@@ -66,7 +66,7 @@ export const updateNews = async (req, res) => {
     const {id} = req.params
     const {title, description, imageUrl, tags} = req.body
     try {
-        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({message: ` no tour exist with id : ${id}`})
+        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({message: ` no news exist with id : ${id}`})
         const updateTour = {title, description, tags: tags.split(','), imageUrl, _id: id}
         await newsModal.findByIdAndUpdate(id, updateTour, {new: true})
         res.json(updateTour)
@@ -131,7 +131,7 @@ export const likeNews = async (req, res) => {
     const {id} = req.params;
     try {
         if (!req.userId) return res.json({message: "User is not authenticated"});
-        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({message: `No tour exist with id: ${id}`});
+        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({message: `No news exist with id: ${id}`});
         const news = await newsModal.findById(id);
         const index = news.likes.findIndex((id) => id === String(req.userId));
         index === -1 ? news.likes.push(req.userId) : news.likes = news.likes.filter((id) => id !== String(req.userId));
