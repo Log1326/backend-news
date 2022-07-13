@@ -5,7 +5,7 @@ import {followUser, get_user, getAllUsers, removeUser, updateUser} from "../cont
 
 const router = express.Router()
 
-router.get('/user', auth, get_user) //get user current
+router.get('/user', auth, get_user)
 router.get('/users', getAllUsers)
 router.put('/user/:id/update', auth, updateUser)
 router.delete('/user/:id/remove', auth, removeUser)

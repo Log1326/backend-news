@@ -25,13 +25,10 @@ app.use('/news', newsRouter)
 app.use('/file', uploadRouter)
 app.use('/chat', chatRouter)
 app.use('/message', messageRouter)
-
-
-
 app.use('/uploads', express.static('uploads'))
 
 //port
-const port = 5000 || process.env.PORT
+const port =  5000|| process.env.PORT
 //connect
 mongoose
     .connect(process.env.MONGOOSE_CONNECT)

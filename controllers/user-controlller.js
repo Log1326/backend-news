@@ -1,5 +1,4 @@
 import userModal from "../models/user-modal.js";
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
@@ -56,21 +55,20 @@ export const removeUser = async (req, res) => {
 
 export const followUser = async (req, res) => {
     const {id} = req.params;
-    const {_id} = req.body;
-
     try {
+        if(id === req.userId) return res.json({message:'ты не можешь на себя подписаться'})
         if (!req.userId) return res.json({message: "User is not authenticated"});
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({message: `No tour exist with id: ${id}`});
         const follow = await userModal.findById(id)
+        const following = await userModal.findById(req.userId)
+        const indexFollowing = following.following.findIndex((id) => id === String(id))
+        indexFollowing === -1 ? following.following.push(id) : following.following = following.following.filter((id) => id !== String(id))
         const indexFollow = follow.followers.findIndex((id) => id === String(req.userId))
         indexFollow === -1 ? follow.followers.push(req.userId) : follow.followers = follow.followers.filter((id) => id !== String(req.userId))
         await userModal.findByIdAndUpdate(id, follow, {new: true})
+        await userModal.findByIdAndUpdate(req.userId, following, {new: true})
         res.status(200).json(indexFollow === -1 ? {message: `subscribed`} : {message: 'unsubscribed'})
     } catch (err) {
         return res.status(500).json({message: `failed followers user`})
     }
-}
-export const unFollowUser = async (req, res) => {
-    // following
-
 }
