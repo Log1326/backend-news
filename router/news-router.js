@@ -6,7 +6,8 @@ import {
     getNewsByUser, likeNews,
     newsByTag,
     relatedNews,
-    searchNews, updateNews
+    searchNews, updateNews,
+    findNewsByLikesId, findMyTags
 } from "../controllers/news-controller.js";
 import auth from "../middlewere/auth.js";
 import {
@@ -24,6 +25,9 @@ router.get('/:id', getNews) //get one news
 router.get('/user_by_news/:id', auth, getNewsByUser)//get news of user id
 router.get('/find/search', searchNews) //searchQuery
 router.get('/tags/:tag', newsByTag) //search tag
+router.get('/find/tags/:id', findMyTags) //search tag
+
+router.get('/like/:like', auth, findNewsByLikesId) //search like
 router.post('/related_tags', relatedNews)  //search relatives news , but this is not work now
 router.get('/', getAllNews) //all news
 router.post('/create', auth, post_create_validation, HandleErrorValidations, createNews) //create news

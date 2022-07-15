@@ -123,7 +123,6 @@ export const relatedNews = async (req, res) => {
     const {tags} = req.body
     try {
         const news = await newsModal.find({tags: {$in: tags}})
-        console.log(tags)
         res.json(news)
     } catch (err) {
         res.status(404).json({message: `relatedNews, this is catch, err: ${err}`});
@@ -142,5 +141,28 @@ export const likeNews = async (req, res) => {
         res.status(200).json(updatedNews);
     } catch (error) {
         res.status(404).json({message: `likeNews,this is catch, err: ${error.message}`});
+    }
+}
+
+export const findNewsByLikesId = async (req, res) => {
+    const {like} = req.params
+    try {
+        const likes = await newsModal.find({likes: {$in: like}})
+        res.json(likes)
+    } catch (err) {
+        res.status(404).json({message: `find likeNews,this is catch, err: ${error.message}`});
+
+    }
+}
+export const findMyTags = async (req, res) => {
+    const {id} = req.params
+    try {
+        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({message: `No news exist with id: ${id}`});
+        const findTags = await newsModal.find({creator: id})
+        const tag = Object.values(findTags).map(item => item.tags).flat()
+        res.json(tag)
+    } catch (err) {
+        res.status(404).json({message: `find tags,this is catch, err: ${error.message}`});
+
     }
 }
