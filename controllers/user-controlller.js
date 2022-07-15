@@ -36,7 +36,7 @@ export const updateUser = async (req, res) => {
         const token = jwt.sign({_id: oldUser._id}, process.env.JWT_ACCESS_SECRET,
             {expiresIn: '1h'})
         const {passwordHash, ...user} = oldUser._doc
-        res.status(200).json({user, token});
+        res.status(200).json({data: user, token});
     } catch (err) {
         return res.status(500).json({message: `failed update user`})
     }
@@ -56,7 +56,7 @@ export const removeUser = async (req, res) => {
 export const followUser = async (req, res) => {
     const {id} = req.params;
     try {
-        if(id === req.userId) return res.json({message:'ты не можешь на себя подписаться'})
+        if (id === req.userId) return res.json({message: 'ты не можешь на себя подписаться'})
         if (!req.userId) return res.json({message: "User is not authenticated"});
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({message: `No tour exist with id: ${id}`});
         const follow = await userModal.findById(id)

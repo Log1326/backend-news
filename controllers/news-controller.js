@@ -98,6 +98,8 @@ export const getNewsByUser = async (req, res) => {
 
 export const searchNews = async (req, res) => {
     const {searchQuery} = req.query;
+    console.log(searchQuery)
+
     try {
         const title = new RegExp(searchQuery, "i");
         const news = await newsModal.find({title});
@@ -118,9 +120,10 @@ export const newsByTag = async (req, res) => {
 }
 
 export const relatedNews = async (req, res) => {
-    const tags = req.body
+    const {tags} = req.body
     try {
         const news = await newsModal.find({tags: {$in: tags}})
+        console.log(tags)
         res.json(news)
     } catch (err) {
         res.status(404).json({message: `relatedNews, this is catch, err: ${err}`});
