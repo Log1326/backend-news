@@ -3,12 +3,23 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
 
-export const get_user = async (req, res) => {
+export const get_current_user = async (req, res) => {
     try {
         const user = await userModal.findById(req.userId)
         if (!user) return res.status(404).json({message: 'user is not found'})
         const {passwordHash, ...data} = user._doc
-        res.status(200).json(data)
+        res.status(201).json(data)
+    } catch (err) {
+        res.status(500).json({message: 'no access'})
+    }
+}
+export const get_user_by_id = async (req, res) => {
+    const {id} = req.params
+    try {
+        const user = await userModal.findById(id)
+        if (!user) return res.status(404).json({message: 'user is not found'})
+        const {passwordHash, ...data} = user._doc
+        res.status(201).json(data)
     } catch (err) {
         res.status(500).json({message: 'no access'})
     }
@@ -21,7 +32,7 @@ export const getAllUsers = async (req, res) => {
             const {phone, passwordHash, email, ...data} = user._doc
             return data
         })
-        res.status(200).json(users)
+        res.status(201).json(users)
     } catch (err) {
         return res.status(500).json({message: `failed get users`})
     }
@@ -36,7 +47,7 @@ export const updateUser = async (req, res) => {
         const token = jwt.sign({_id: oldUser._id}, process.env.JWT_ACCESS_SECRET,
             {expiresIn: '1h'})
         const {passwordHash, ...user} = oldUser._doc
-        res.status(200).json({data: user, token});
+        res.status(201).json({data: user, token});
     } catch (err) {
         return res.status(500).json({message: `failed update user`})
     }
@@ -47,7 +58,7 @@ export const removeUser = async (req, res) => {
     if (req.userId !== id) return res.json({message: 'Access Denied!'})
     try {
         await userModal.findByIdAndRemove(id)
-        res.status(200).json("User Deleted Successfully!");
+        res.status(201).json("User Deleted Successfully!");
     } catch (err) {
         return res.status(500).json({message: `failed remove user`})
     }
